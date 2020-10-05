@@ -28,6 +28,7 @@ import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.Range;
 
 @ConfigGroup("inventorytags")
 public interface InventoryTagsConfig extends Config
@@ -35,10 +36,14 @@ public interface InventoryTagsConfig extends Config
 	enum DisplayMode
 	{
 		OUTLINE,
-		UNDERLINE
+		UNDERLINE,
+		OUTLINE_FILL
 	}
 
 	String GROUP = "inventorytags";
+
+	int OPACITY_LIMIT_MIN = 0;
+	int OPACITY_LIMIT_MAX = 255;
 
 	@ConfigItem(
 		position = 0,
@@ -106,8 +111,23 @@ public interface InventoryTagsConfig extends Config
 		return new Color(0, 255, 255);
 	}
 
+	@Range(
+			min = OPACITY_LIMIT_MIN,
+			max = OPACITY_LIMIT_MAX
+	)
 	@ConfigItem(
-		position = 6,
+			position = 6,
+			keyName = "alphaValue",
+			name = "Opacity Level",
+			description = "Configures the opacity of each color"
+	)
+	default int getAlphaValue()
+	{
+		return 100;
+	}
+
+	@ConfigItem(
+		position = 7,
 		keyName = "displayMode",
 		name = "Display mode",
 		description = "How tags are displayed in the inventory"

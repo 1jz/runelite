@@ -33,6 +33,7 @@ import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.inventorytags.InventoryTagsConfig.DisplayMode;
 import net.runelite.client.ui.overlay.WidgetItemOverlay;
+import net.runelite.client.util.ImageUtil;
 
 public class InventoryTagsOverlay extends WidgetItemOverlay
 {
@@ -61,10 +62,17 @@ public class InventoryTagsOverlay extends WidgetItemOverlay
 			if (color != null)
 			{
 				Rectangle bounds = itemWidget.getCanvasBounds();
-				if (displayMode == DisplayMode.OUTLINE)
+				if (displayMode == DisplayMode.OUTLINE || displayMode == DisplayMode.OUTLINE_FILL)
 				{
 					final BufferedImage outline = itemManager.getItemOutline(itemId, itemWidget.getQuantity(), color);
 					graphics.drawImage(outline, (int) bounds.getX(), (int) bounds.getY(), null);
+
+					if (displayMode == DisplayMode.OUTLINE_FILL)
+					{
+						final Color fillColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), config.getAlphaValue());
+						final BufferedImage inner = ImageUtil.fillImage(itemManager.getImage(itemId), fillColor);
+						graphics.drawImage(inner, (int) bounds.getX(), (int) bounds.getY(), null);
+					}
 				}
 				else
 				{
